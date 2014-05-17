@@ -43,7 +43,7 @@ public class MainFrame extends JFrame implements GUIComponent {
         loader = new ImageManager();
         loadTargetImage();
         loadCurrentImage();
-        setSize(targetImage.getWidth(), targetImage.getHeight()*2 + GuiConstants.mainFrameHeightModifier);
+        setSize(targetImage.getWidth() *2, targetImage.getHeight() + GuiConstants.mainFrameHeightModifier);
         centerMainFrame();
         createImagePanels();
         createButtons();
@@ -70,7 +70,7 @@ public class MainFrame extends JFrame implements GUIComponent {
 
     private void createImagePanelsContainer () {
         imagePanelsContainer = new JPanel();
-        imagePanelsContainer.setLayout(new BoxLayout(imagePanelsContainer, BoxLayout.PAGE_AXIS));
+        imagePanelsContainer.setLayout(new BoxLayout(imagePanelsContainer, BoxLayout.LINE_AXIS));
         imagePanelsContainer.add(currentImagePanel);
         imagePanelsContainer.add(targetImagePanel);
         add(imagePanelsContainer, BorderLayout.CENTER);
