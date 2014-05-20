@@ -9,45 +9,106 @@ import java.util.Random;
 
 
 public class Circle implements Cloneable {
+    private final Dimension dimension;
 
     private static final int maxRandomRadius = 50;
+    private static final int minRandomRadius = 3;
+
     private static final float maxColorComponentValue = 1.0f;
     private static final float minFieldValue = 0.0f;
     // Required, because Color constructor requires sometimes value in 0.0 - 1.0 range
     private static final float creationWithAlphaFactor = 255;
 
     private int radius;
-    private float alpha;
+    private float alpha; //przyjmuje wartości od 0 do 1 ??
     private Point centerPoint;
     private Color fillColor;
 
-    public Circle() {
+    public static Circle newRandomCircle(Dimension dimension)
+    {
+        Circle circle = new Circle(dimension);
+        circle.randomize(dimension.width, dimension.height);
+        return circle;
     }
 
     public Circle(Circle circle) {
+        this.dimension = circle.dimension;
         this.radius = circle.radius;
         this.fillColor = createColorWithAlpha(circle.fillColor, alpha);
         this.alpha = circle.alpha;
         this.centerPoint = new Point((int)circle.centerPoint.getX(), (int)circle.centerPoint.getY());
     }
 
-    public Circle(int radius, float alpha, Point centerPoint, Color fillColor) {
+    public Circle(Dimension dimension, int radius, float alpha, Point centerPoint, Color fillColor) {
+        this.dimension = dimension;
         this.radius = radius;
         this.fillColor = createColorWithAlpha(fillColor, alpha);
         this.alpha = alpha;
         this.centerPoint = centerPoint;
     }
 
-    public void randomize(int maxWidth, int maxHeight) {
+    private Circle(final Dimension dimension) {
+        this.dimension = dimension;
+    }
+
+    public void mutate(double sigma)
+    {
+        Random normalGenerator = new Random();
+
+        centerPoint.x = (int) Math.abs((centerPoint.x + normalGenerator.nextGaussian() * sigma * dimension.getWidth()) % dimension.getWidth());
+        centerPoint.y = (int) Math.abs((centerPoint.y + normalGenerator.nextGaussian() * sigma * dimension.getHeight()) % dimension.getHeight());
+
+        int newRed = (int) Math.abs((fillColor.getRed() + normalGenerator.nextGaussian() * sigma * 255) % 255);
+        int newGreen = (int) Math.abs((fillColor.getGreen() + normalGenerator.nextGaussian() * sigma * 255) % 255);
+        int newBlue = (int) Math.abs((fillColor.getBlue() + normalGenerator.nextGaussian() * sigma * 255) % 255);
+        fillColor = new Color(newRed, newGreen, newBlue);
+
+        alpha = (float) Math.abs((alpha + normalGenerator.nextGaussian() * sigma) % 1);
+
+        radius = (int) Math.abs((radius-minRandomRadius + normalGenerator.nextGaussian() * sigma * (maxRandomRadius-minRandomRadius)) % maxRandomRadius-minRandomRadius) + minRandomRadius;
+    }
+
+    private void randomize(int maxWidth, int maxHeight) {
         Random random = new Random();
+
         centerPoint = new Point();
         fillColor = createRandomColor(random);
-        float alpha = random.nextFloat();
-        setAlpha(alpha);
+
+        alpha = random.nextFloat();
         centerPoint.x = random.nextInt(maxWidth);
         centerPoint.y = random.nextInt(maxHeight);
-        radius = (int)(random.nextFloat() * maxRandomRadius);
+
+        radius = (int)(random.nextFloat() * (maxRandomRadius-minRandomRadius) + minRandomRadius);
     }
+
+    private Color createRandomColor (Random random) {
+        float red = random.nextFloat();
+        float green = random.nextFloat();
+        float blue = random.nextFloat();
+        Color newColor = new Color(red, green, blue);
+        return newColor;
+    }
+
+    @Override
+    public String toString()
+    {
+        String s = "radius: " + radius + "; alpha: " + alpha + "; X: " + centerPoint.x + "; Y: " + centerPoint.y + "; R: " + fillColor.getRed() + "; G: " + fillColor.getGreen() + "; B: " + fillColor.getBlue();
+        return s;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void modifyColorWithRandomValues(float red, float green, float blue, float alpha) {
         float newRed = fillColor.getRed()/creationWithAlphaFactor + red;
@@ -84,13 +145,7 @@ public class Circle implements Cloneable {
         return value;
     }
 
-    private Color createRandomColor (Random random) {
-        float red = random.nextFloat();
-        float green = random.nextFloat();
-        float blue = random.nextFloat();
-        Color newColor = new Color(red, green, blue);
-        return newColor;
-    }
+
 
     public void setCenterPoint(Point centerPoint) {
         this.centerPoint = centerPoint;
@@ -125,6 +180,14 @@ public class Circle implements Cloneable {
     public Color getFillColor() {
         return fillColor;
     }
+
+    public Color getColorWithAlpha() {
+        Color colorWithAlpha = new Color(fillColor.getRed() / creationWithAlphaFactor,
+                fillColor.getGreen() / creationWithAlphaFactor,
+                fillColor.getBlue() / creationWithAlphaFactor,
+                alpha);
+        return  colorWithAlpha;
+    };
 
     private Color createColorWithAlpha(Color color, float alpha) {
             Color colorWithAlpha = new Color(color.getRed() / creationWithAlphaFactor,

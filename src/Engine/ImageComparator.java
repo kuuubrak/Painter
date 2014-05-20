@@ -9,30 +9,34 @@ import java.awt.image.BufferedImage;
  */
 public class ImageComparator {
 
-    byte[] currentImagePixels;
-    byte[] targetImagePixels;
-
-    public double compareTwoImages(BufferedImage currentImage, BufferedImage targetImage) {
+    public static double compareTwoImages(BufferedImage currentImage, BufferedImage targetImage) {
         double compatibilityFactor;
-        loadImagesAsPixelsBuffers(currentImage, targetImage);
-        compatibilityFactor = compare();
+        byte[] currentImagePixels =  loadImageAsPixelsBuffers(currentImage);
+        byte[] targetImagePixels = loadImageAsPixelsBuffers(targetImage);
+        compatibilityFactor = compare(currentImagePixels, targetImagePixels);
         return compatibilityFactor;
     }
 
-    private void loadImagesAsPixelsBuffers (BufferedImage currentImage, BufferedImage targetImage) {
+    private static byte[] loadImageAsPixelsBuffers (BufferedImage image) {
         ImageManager imageManager = new ImageManager();
-        this.currentImagePixels = imageManager.convertImageToPixelMap(currentImage);
-        this.targetImagePixels = imageManager.convertImageToPixelMap(targetImage);
+        return imageManager.convertImageToPixelMap(image);
     }
 
-    private double compare() {
-        int accordingPixels = 0;
+    /**
+     *
+     * @param currentImagePixels
+     * @param targetImagePixels
+     * @return im mniejsza wartość tym lepiej
+     */
+    private static double compare(byte[] currentImagePixels, byte[] targetImagePixels) {
+        long accordingPixels = 0;
         double compatibilityFactor;
 
         for (int i = 0; i < targetImagePixels.length; i++) {
-            if (currentImagePixels[i] == targetImagePixels[i]) {
-                accordingPixels++;
-            }
+            accordingPixels += Math.abs(targetImagePixels[i] - currentImagePixels[i]);
+            //if (currentImagePixels[i] == targetImagePixels[i]) {
+            //    accordingPixels++;
+            //}
         }
         compatibilityFactor = (double)accordingPixels / targetImagePixels.length;
         return compatibilityFactor;

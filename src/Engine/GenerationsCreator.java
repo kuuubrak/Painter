@@ -4,23 +4,121 @@ import DataModel.Circle;
 import Engine.FileManager.ImageManager;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.Random;
+import java.awt.image.ColorModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tomasz on 16.05.2014.
+ *
+ * Klasa reprezentująca jednego osobnika populacji
  */
 public class GenerationsCreator {
 
-    private Circle baseCircle;
-    private Circle currentCircle;
-    private Circle newCircle;
-    private double phiAttribute;
-    private double sigmaAttribute;
-    private double compatibilityFactor;
-    private int iterationCounter;
-    private int correctImageCounter;
+    static int noOfGenes = 0;
+    static Dimension dimension = new Dimension();
 
+    private List<Circle> circles = new ArrayList<Circle>();
+
+    public static void setNoOfGenes(int noOfGenes)
+    {
+        GenerationsCreator.noOfGenes = noOfGenes;
+    }
+
+    public static void setDimension(Dimension dimension)
+    {
+        GenerationsCreator.dimension = dimension;
+    }
+
+    public GenerationsCreator()
+    {
+        int i = 0;
+        while(i < noOfGenes)
+        {
+            Circle randomCircle = Circle.newRandomCircle(dimension);
+            circles.add(randomCircle);
+            i++;
+        }
+    }
+
+    public GenerationsCreator(final GenerationsCreator toBeCopied)
+    {
+        //Kopiowanie kółek
+        for (Circle circle : toBeCopied.circles)
+        {
+            Circle copyOfCircle = new Circle(circle);
+            circles.add(copyOfCircle);
+        }
+    }
+
+    public void mutate(final double sigma)
+    {
+        for (Circle circle : circles)
+        {
+            if (Math.random() < EngineConstants.probabilityOfMutatingGen)
+            {
+                circle.mutate(sigma);
+            }
+        }
+    }
+
+    public BufferedImage getBufferedImage()
+    {
+        BufferedImage newGenerationImage = ImageManager.intializeStartingImage(dimension);
+
+        for (Circle circle : circles)
+        {
+            newGenerationImage = paintNewCircle(newGenerationImage, circle);
+        }
+
+        return  newGenerationImage;
+    }
+
+
+    private BufferedImage paintNewCircle (BufferedImage currentImage, Circle circleToBeAdded) {
+        Graphics2D imageGraphics = currentImage.createGraphics();
+        imageGraphics.setPaint(circleToBeAdded.getColorWithAlpha());
+
+        imageGraphics.fillOval(circleToBeAdded.getCenterPoint().x,
+                circleToBeAdded.getCenterPoint().y,
+                circleToBeAdded.getRadius(),
+                circleToBeAdded.getRadius());
+
+        return currentImage;
+    }
+
+
+    @Override
+    public String toString()
+    {
+        String s = "";
+
+        for (Circle circle : circles)
+        {
+            s += circle + "\n";
+        }
+        return s;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     public GenerationsCreator(Circle baseCircle) {
         this.baseCircle = baseCircle;
         this.sigmaAttribute = EngineConstants.exampleStartingSigma;
@@ -30,25 +128,15 @@ public class GenerationsCreator {
         correctImageCounter = 0;
         this.currentCircle = baseCircle;
     }
+    */
 
-    public double getCompatibilityFactor() {
-        return compatibilityFactor;
-    }
-
-    public double getPhiAttribute() {
-        return phiAttribute;
-    }
-
-    public double getSigmaAttribute() {
-        return sigmaAttribute;
-    }
-
+    /*
     public BufferedImage createNextGeneration(BufferedImage currentImage, BufferedImage targetImage) {
 
         BufferedImage newGenerationImage = null;
         newGenerationImage = paintNewCircle(currentImage);
-        ImageComparator comparator = new ImageComparator();
-        double newCompatibilityFactor = comparator.compareTwoImages(newGenerationImage, targetImage);
+
+        double newCompatibilityFactor = ImageComparator.compareTwoImages(newGenerationImage, targetImage);
         if (newCompatibilityFactor > compatibilityFactor) {
             compatibilityFactor = newCompatibilityFactor;
             currentCircle = new Circle(newCircle);
@@ -59,39 +147,15 @@ public class GenerationsCreator {
 
         return newGenerationImage;
     }
+    */
 
+    /*
     public void setBeginningCompatibilityFactor(BufferedImage currentImage, BufferedImage targetImage) {
-        ImageComparator comparator = new ImageComparator();
-        compatibilityFactor = comparator.compareTwoImages(currentImage, targetImage);
+        compatibilityFactor = ImageComparator.compareTwoImages(currentImage, targetImage);
     }
+    */
 
-    private void generateNewCircle(BufferedImage currentImage) {
-        Random normalGenerator = new Random();
-        newCircle = new Circle(currentCircle);
-
-        float randomPositionX = (float)(normalGenerator.nextGaussian() * sigmaAttribute);
-        float randomPositionY = (float)(normalGenerator.nextGaussian() * sigmaAttribute);
-        float randomColorRed = (float) (normalGenerator.nextGaussian() * sigmaAttribute);
-        float randomColorGreen = (float)(normalGenerator.nextGaussian() * sigmaAttribute);
-        float randomColorBlue = (float)(normalGenerator.nextGaussian() * sigmaAttribute);
-        float randomColorAlpha = (float) (normalGenerator.nextGaussian() * sigmaAttribute);
-        float randomRadius = (float)(normalGenerator.nextGaussian() * sigmaAttribute);
-
-        Dimension imageDimension = new Dimension(currentImage.getWidth(), currentImage.getHeight());
-
-        newCircle.modifyColorWithRandomValues(randomColorRed, randomColorGreen, randomColorBlue, randomColorAlpha);
-        newCircle.modifySizeAndLocationWithRandomValues(randomPositionX, randomPositionY, imageDimension, randomRadius);
-    }
-
-    private BufferedImage paintNewCircle (BufferedImage currentImage) {
-        BufferedImage newImage = ImageManager.bufferedImageDeepCopy(currentImage);
-        generateNewCircle(newImage);
-        Graphics2D imageGraphics = newImage.createGraphics();
-        imageGraphics.setColor(newCircle.getFillColor());
-        imageGraphics.fillOval(newCircle.getCenterPoint().x, newCircle.getCenterPoint().y, newCircle.getRadius(), newCircle.getRadius());
-        return newImage;
-    }
-
+    /*
     private void updateAttribues () {
         if (iterationCounter == EngineConstants.mAttribute) {
             iterationCounter = 0;
@@ -104,5 +168,6 @@ public class GenerationsCreator {
             correctImageCounter = 0;
         }
     }
+    */
 
 }

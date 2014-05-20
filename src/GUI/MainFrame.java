@@ -93,7 +93,7 @@ public class MainFrame extends JFrame implements GUIComponent {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ImageRecreator recreator = new ImageRecreator(MainFrame.this);
-                recreator.recreateImage(targetImage, currentImage);
+                recreator.recreateImage(targetImage);
             }
         });
 
@@ -121,6 +121,9 @@ public class MainFrame extends JFrame implements GUIComponent {
     public void updateCurrentImage(BufferedImage currentImage) {
         this.currentImage = currentImage;
         currentImagePanel.setImage(currentImage);
-        currentImagePanel.repaint();
+        //currentImagePanel.repaint();
+        //TODO Trzeba dobrze ogarnąć wyświetlanie w Javie, tzn. jakiej metody tu użyć
+        update(getGraphics());
+        //currentImagePanel.update(getGraphics());
     }
 }

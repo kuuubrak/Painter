@@ -37,7 +37,7 @@ public class ImageManager {
         return imageDimension;
     }
 
-    public BufferedImage intializeStartingImage (Dimension dimension) {
+    public static BufferedImage intializeStartingImage (Dimension dimension) {
         BufferedImage newImage = new BufferedImage((int)dimension.getWidth(), (int)dimension.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         Graphics2D imageGraphics  = newImage.createGraphics();
         imageGraphics.setPaint(Color.WHITE);
