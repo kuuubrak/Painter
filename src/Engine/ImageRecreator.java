@@ -48,13 +48,13 @@ public class ImageRecreator {
             // 3. Wybieranie lepszego osobnika
             //TODO nie trzeba liczyć dwa razy współczynnika dopasowania dla rodzica
             BufferedImage parentImage = parent.getBufferedImage();
-            double parentCompatibilityFactor = ImageComparator.compareTwoImages(parentImage, targetImage);
+            double parentCompatibilityFactor = ImageComparator.cTI(parentImage, targetImage);
             BufferedImage childImage = child.getBufferedImage();
-            double childCompatibilityFactor = ImageComparator.compareTwoImages(childImage, targetImage);
+            double childCompatibilityFactor = ImageComparator.cTI(childImage, targetImage);
 
-            System.out.println("parentCompatibilityFactor: " + parentCompatibilityFactor);
-            System.out.println("childCompatibilityFactor: " + childCompatibilityFactor);
-            System.out.println(child);
+            //System.out.println("parentCompatibilityFactor: " + parentCompatibilityFactor);
+            //System.out.println("childCompatibilityFactor: " + childCompatibilityFactor);
+            //System.out.println(child);
 
             if (childCompatibilityFactor < parentCompatibilityFactor)
             {
@@ -70,7 +70,7 @@ public class ImageRecreator {
             // 4 i 5. Aktualizacja proporcji wybranych y-ków
             if (noOfChosenChildren + noOfChosenParents == m)
             {
-                double phi = noOfChosenChildren / m;
+                double phi = noOfChosenChildren / (double) m;
 
                 if (phi < EngineConstants.sigmaDecisionBorder)
                 {
@@ -81,18 +81,21 @@ public class ImageRecreator {
                     sigma *= EngineConstants.c2Attribute;
                 }
 
+
+                //System.out.println("phi: " + phi + "; sigma: " + sigma + "; noOfChosenChildren: " + noOfChosenChildren);
+
                 noOfChosenChildren = 0;
                 noOfChosenParents = 0;
             }
 
-            try
-            {
-                Thread.sleep(500);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
+            //try
+            //{
+            //    Thread.sleep(1000);
+            //}
+            //catch (InterruptedException e)
+            //{
+            //    e.printStackTrace();
+            //}
 
         } while (sigma > EngineConstants.sigmaMinimum);
     }

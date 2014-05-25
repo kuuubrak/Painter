@@ -51,12 +51,17 @@ public class Circle implements Cloneable {
         this.dimension = dimension;
     }
 
-    public void mutate(double sigma)
+    public void mutateCenterPoint(double sigma)
     {
         Random normalGenerator = new Random();
 
         centerPoint.x = (int) Math.abs((centerPoint.x + normalGenerator.nextGaussian() * sigma * dimension.getWidth()) % dimension.getWidth());
         centerPoint.y = (int) Math.abs((centerPoint.y + normalGenerator.nextGaussian() * sigma * dimension.getHeight()) % dimension.getHeight());
+    }
+
+    public void mutateColor(double sigma)
+    {
+        Random normalGenerator = new Random();
 
         int newRed = (int) Math.abs((fillColor.getRed() + normalGenerator.nextGaussian() * sigma * 255) % 255);
         int newGreen = (int) Math.abs((fillColor.getGreen() + normalGenerator.nextGaussian() * sigma * 255) % 255);
@@ -64,6 +69,11 @@ public class Circle implements Cloneable {
         fillColor = new Color(newRed, newGreen, newBlue);
 
         alpha = (float) Math.abs((alpha + normalGenerator.nextGaussian() * sigma) % 1);
+    }
+
+    public void mutateRadius(double sigma)
+    {
+        Random normalGenerator = new Random();
 
         radius = (int) Math.abs((radius-minRandomRadius + normalGenerator.nextGaussian() * sigma * (maxRandomRadius-minRandomRadius)) % maxRandomRadius-minRandomRadius) + minRandomRadius;
     }

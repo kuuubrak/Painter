@@ -60,7 +60,12 @@ public class GenerationsCreator {
         {
             if (Math.random() < EngineConstants.probabilityOfMutatingGen)
             {
-                circle.mutate(sigma);
+                double value = Math.random();
+                if (value >= 0.66)
+                    circle.mutateCenterPoint(sigma);
+                else if (value >= 0.33)
+                    circle.mutateColor(sigma);
+                else circle.mutateRadius(sigma);
             }
         }
     }
