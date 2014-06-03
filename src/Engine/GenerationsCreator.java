@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by tomasz on 16.05.2014.
@@ -20,8 +21,14 @@ public class GenerationsCreator {
 
     static int noOfGenes = 0;
     static Dimension dimension = new Dimension();
+    
+    // ilosc modyfikowanych cech
+    static final int fNumber = 4;
+    Random random = new Random();
 
-    private List<Circle> circles = new ArrayList<Circle>();
+    // tablica kolek, by wybor kolka byl przejrzysty
+    //private List<Circle> circles = new ArrayList<Circle>();
+    private Circle[] circles = new Circle[noOfGenes];
 
     public static void setNoOfGenes(int noOfGenes)
     {
@@ -39,7 +46,8 @@ public class GenerationsCreator {
         while(i < noOfGenes)
         {
             Circle randomCircle = Circle.newRandomCircle(dimension);
-            circles.add(randomCircle);
+            //circles.add(randomCircle);
+            circles[i] = randomCircle;
             i++;
         }
     }
@@ -47,35 +55,40 @@ public class GenerationsCreator {
     public GenerationsCreator(final GenerationsCreator toBeCopied)
     {
         //Kopiowanie kółek
-        for (Circle circle : toBeCopied.circles)
+        /*for (Circle circle : toBeCopied.circles)
         {
             Circle copyOfCircle = new Circle(circle);
             circles.add(copyOfCircle);
-        }
+        }*/
+    	for (int i = 0; i < noOfGenes; ++i)
+    	{
+    		Circle copyOfCircle = new Circle(toBeCopied.circles[i]);
+    		circles[i] = copyOfCircle;
+    	}
     }
 
-    public void mutate(final double sigma)
+    // mutuje tylko jedna cecha, dla jednego kolka, z odpowiednia sigma
+    public void mutate(final double[] sigma, final int cCounter, final int fCounter)
     {
-        for (Circle circle : circles)
-        {
-            if (Math.random() < EngineConstants.probabilityOfMutatingGen)
-            {
-                double value = Math.random();
-                if (value >= 0.66)
-                    circle.mutateCenterPoint(sigma);
-                else if (value >= 0.33)
-                    circle.mutateColor(sigma);
-                else circle.mutateRadius(sigma);
-            }
-        }
+    	Circle circle = circles[cCounter];
+    	if ( fCounter == 0 )
+    		circle.mutateCenterPoint(sigma[0]);
+    	else if ( fCounter == 1 )
+            circle.mutateColor(sigma[1]);
+    	else if ( fCounter == 2 ) {
+    		circle.mutateRadius(sigma[2]);
+    	} else
+             circle.mutateAlpha(sigma[3]);
     }
 
     public BufferedImage getBufferedImage()
     {
         BufferedImage newGenerationImage = ImageManager.intializeStartingImage(dimension);
 
-        for (Circle circle : circles)
+        //for (Circle circle : circles)
+        for ( int i = 0; i < noOfGenes; ++i )
         {
+        	Circle circle = circles[i];
             newGenerationImage = paintNewCircle(newGenerationImage, circle);
         }
 
