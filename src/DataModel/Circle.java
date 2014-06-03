@@ -11,7 +11,7 @@ import java.util.Random;
 public class Circle implements Cloneable {
     private final Dimension dimension;
 
-    // do modyfikacji mediany rozkladu Gaussa; jezeli caly zakres bylby za duzy
+    // do modyfikacji odchylenia standardowego rozkladu Gaussa; jezeli caly zakres bylby za duzy
     private static final int gaussDivisor = 1;
     
     private static final int maxRandomRadius = 50;
