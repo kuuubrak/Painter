@@ -9,7 +9,8 @@ public class EngineConstants {
     public static final int mAttribute = 10;
     public static double sigmaMinimum = 0.000005;
     public static double exampleStartingSigma = 0.5;
-    public static double sigmaDecisionBorder = 0.2;
+    //public static double sigmaDecisionBorder = 0.2;
+    public static double sigmaDecisionBorder = 20;
     public static int noOfGenes = 50;
     public static double probabilityOfMutatingGen = 0.2;
 }
