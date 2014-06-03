@@ -11,6 +11,6 @@ public class EngineConstants {
     public static double exampleStartingSigma = 0.5;
     //public static double sigmaDecisionBorder = 0.2;
     public static double sigmaDecisionBorder = 20;
-    public static int noOfGenes = 50;
+    public static int noOfGenes = 200;
     public static double probabilityOfMutatingGen = 0.2;
 }

@@ -12,6 +12,7 @@ public class GuiConstants {
     public static final int mainFrameHeightModifier = 64;
     public static final String clearButtonTitle = "Clear";
     public static final String runButtonTitle = "Run";
+    public static final String loadButtonTitle = "Load image";
 
 }
 
