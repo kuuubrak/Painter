@@ -11,11 +11,14 @@ import java.util.Random;
 public class Circle implements Cloneable {
     private final Dimension dimension;
 
+    // do modyfikacji mediany rozkladu Gaussa; jezeli caly zakres bylby za duzy
+    private static final int gaussDivisor = 1;
+    
     private static final int maxRandomRadius = 50;
     private static final int minRandomRadius = 3;
 
-    private static final float maxColorComponentValue = 1.0f;
-    private static final float minFieldValue = 0.0f;
+    //private static final float maxColorComponentValue = 1.0f;
+    //private static final float minFieldValue = 0.0f;
     // Required, because Color constructor requires sometimes value in 0.0 - 1.0 range
     private static final float creationWithAlphaFactor = 255;
 
@@ -55,27 +58,35 @@ public class Circle implements Cloneable {
     {
         Random normalGenerator = new Random();
 
-        centerPoint.x = (int) Math.abs((centerPoint.x + normalGenerator.nextGaussian() * sigma * dimension.getWidth()) % dimension.getWidth());
-        centerPoint.y = (int) Math.abs((centerPoint.y + normalGenerator.nextGaussian() * sigma * dimension.getHeight()) % dimension.getHeight());
+        centerPoint.x = (int) Math.abs((centerPoint.x + normalGenerator.nextGaussian() * sigma * dimension.getWidth()/gaussDivisor) % dimension.getWidth());
+        centerPoint.y = (int) Math.abs((centerPoint.y + normalGenerator.nextGaussian() * sigma * dimension.getHeight()/gaussDivisor) % dimension.getHeight());
     }
 
     public void mutateColor(double sigma)
     {
         Random normalGenerator = new Random();
 
-        int newRed = (int) Math.abs((fillColor.getRed() + normalGenerator.nextGaussian() * sigma * 255) % 255);
-        int newGreen = (int) Math.abs((fillColor.getGreen() + normalGenerator.nextGaussian() * sigma * 255) % 255);
-        int newBlue = (int) Math.abs((fillColor.getBlue() + normalGenerator.nextGaussian() * sigma * 255) % 255);
+        int newRed = (int) Math.abs((fillColor.getRed() + normalGenerator.nextGaussian() * sigma * 255/gaussDivisor) % 255);
+        int newGreen = (int) Math.abs((fillColor.getGreen() + normalGenerator.nextGaussian() * sigma * 255/gaussDivisor) % 255);
+        int newBlue = (int) Math.abs((fillColor.getBlue() + normalGenerator.nextGaussian() * sigma * 255/gaussDivisor) % 255);
         fillColor = new Color(newRed, newGreen, newBlue);
 
-        alpha = (float) Math.abs((alpha + normalGenerator.nextGaussian() * sigma) % 1);
+        // modyfikacja alfy odbywa sie teraz niezaleznie od modyfikacji koloru
+        //alpha = (float) Math.abs((alpha + normalGenerator.nextGaussian() * sigma/gaussDivisor) % 1);
+    }
+    
+    // modyfikacja koloru
+    public void mutateAlpha( double sigma )
+    {
+    	Random normalGenerator = new Random();
+    	alpha = (float) Math.abs((alpha + normalGenerator.nextGaussian() * sigma/gaussDivisor) % 1);
     }
 
     public void mutateRadius(double sigma)
     {
         Random normalGenerator = new Random();
 
-        radius = (int) Math.abs((radius-minRandomRadius + normalGenerator.nextGaussian() * sigma * (maxRandomRadius-minRandomRadius)) % maxRandomRadius-minRandomRadius) + minRandomRadius;
+        radius = (int) Math.abs((radius-minRandomRadius + normalGenerator.nextGaussian() * sigma * (maxRandomRadius-minRandomRadius)/gaussDivisor) % maxRandomRadius-minRandomRadius) + minRandomRadius;
     }
 
     private void randomize(int maxWidth, int maxHeight) {
@@ -119,7 +130,7 @@ public class Circle implements Cloneable {
 
 
 
-
+/*
     public void modifyColorWithRandomValues(float red, float green, float blue, float alpha) {
         float newRed = fillColor.getRed()/creationWithAlphaFactor + red;
         float newGreen = fillColor.getGreen()/creationWithAlphaFactor + green;
@@ -155,7 +166,7 @@ public class Circle implements Cloneable {
         return value;
     }
 
-
+*/
 
     public void setCenterPoint(Point centerPoint) {
         this.centerPoint = centerPoint;
