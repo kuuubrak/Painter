@@ -25,6 +25,10 @@ public class MainFrame extends JFrame implements GUIComponent {
     private JButton clearButton;
     private JButton runButton;
     private JButton loadButton;
+    private JButton parametersButton;
+
+    private Thread recreator = null;
+    private ImageRecreator recr = null;
 
     private ImageManager loader;
 
@@ -49,7 +53,14 @@ public class MainFrame extends JFrame implements GUIComponent {
         centerMainFrame();
         createImagePanels();
         createButtons();
+
+        createParametersList();
         }
+
+    private void createParametersList()
+    {
+        add(imagePanelsContainer, BorderLayout.CENTER);
+    }
 
     private static void createMainFrame() {
         MainFrame mainFrame = new MainFrame(GuiConstants.mainFrameTitle);
@@ -92,12 +103,44 @@ public class MainFrame extends JFrame implements GUIComponent {
         clearButton = new JButton(GuiConstants.clearButtonTitle);
         runButton = new JButton(GuiConstants.runButtonTitle);
         loadButton = new JButton(GuiConstants.loadButtonTitle);
+        parametersButton = new JButton(GuiConstants.parametersButtonTitle);
 
         runButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImageRecreator recreator = new ImageRecreator(MainFrame.this);
-                recreator.recreateImage(targetImage);
+                if (recreator == null)
+                {
+                    clearButton.setEnabled(false);
+                    loadButton.setEnabled(false);
+                    parametersButton.setEnabled(false);
+                    runButton.setText("Stop");
+
+                    recr = new ImageRecreator(MainFrame.this);
+                    recr.cont = true;
+                    recr.recreateImage(targetImage);
+                    recreator = new Thread(recr);
+                    recreator.start();
+                }
+                else
+                {
+                    recr.cont = false;
+                    try
+                    {
+                        recreator.join();
+                    }
+                    catch (InterruptedException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+                    recreator = null;
+                    recr = null;
+
+                    clearButton.setEnabled(true);
+                    loadButton.setEnabled(true);
+                    parametersButton.setEnabled(true);
+                    runButton.setText("Run");
+                }
+
             }
         });
 
@@ -142,6 +185,15 @@ public class MainFrame extends JFrame implements GUIComponent {
             }
         });
 
+        parametersButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                ParameterFrame.main(new String[1]);
+            }
+        });
+
         createButtonContainer();
     }
 
@@ -150,6 +202,7 @@ public class MainFrame extends JFrame implements GUIComponent {
         buttonsContainer.add(clearButton);
         buttonsContainer.add(runButton);
         buttonsContainer.add(loadButton);
+        buttonsContainer.add(parametersButton);
         add(buttonsContainer, BorderLayout.SOUTH);
     }
 

@@ -13,6 +13,7 @@ public class GuiConstants {
     public static final String clearButtonTitle = "Clear";
     public static final String runButtonTitle = "Run";
     public static final String loadButtonTitle = "Load image";
+    public static final String parametersButtonTitle = "Preferences";
 
 }
 

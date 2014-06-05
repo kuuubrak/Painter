@@ -13,14 +13,17 @@ import java.util.Random;
  *
  * Klasa zawierająca główny algorytm genetyczny.
  */
-public class ImageRecreator {
+public class ImageRecreator implements Runnable {
 
     private final int noOfGenes;
     // kazda cecha ma osobna sigme, poniewaz ma osobny rozklad
     private double[] sigma = new double[GenerationsCreator.fNumber];
     private int m;
+    private BufferedImage targetImage;
 
     private GUIComponent mainFrame;
+
+    public boolean cont = true;
 
     public ImageRecreator(GUIComponent mainFrame) {
         this.mainFrame = mainFrame;
@@ -31,6 +34,11 @@ public class ImageRecreator {
     }
 
     public void recreateImage(BufferedImage targetImage) {
+        this.targetImage = targetImage;
+    }
+
+    public void run()
+    {
         //Ustawianie parametrów populacji
         Dimension imageSize = new Dimension(targetImage.getWidth(), targetImage.getHeight());
         GenerationsCreator.setDimension(imageSize);
@@ -38,20 +46,18 @@ public class ImageRecreator {
 
         // sigmy sa osobne dla cech, to i ich liczniki musza byc osobne
         int[] noOfChosenChildren = new int[GenerationsCreator.fNumber];
-    	int[] noOfChosenParents = new int[GenerationsCreator.fNumber];
+        int[] noOfChosenParents = new int[GenerationsCreator.fNumber];
         for ( int i=0; i < GenerationsCreator.fNumber; ++i )
         {
-        	noOfChosenChildren[i] = 0;
-        	noOfChosenParents[i] = 0;
+            noOfChosenChildren[i] = 0;
+            noOfChosenParents[i] = 0;
         }
         // licznik kolek i cech, poniewaz modyfikujemy po jednym per mutacja
         int cCounter = 0;
         int fCounter = 0;
-        // jezeliby losowac modyfikowana ceche/kolo
-        Random random = new Random();
         // do wydruku koncowej oceny dopasowania
         double compatibilityFactor = 0;
-        
+
         // 1. Tworzenie osobnika początkowego
         GenerationsCreator parent = new GenerationsCreator();
         mainFrame.updateCurrentImage(parent.getBufferedImage());
@@ -87,7 +93,7 @@ public class ImageRecreator {
             // 4 i 5. Aktualizacja proporcji wybranych y-ków
             if (noOfChosenChildren[fCounter] + noOfChosenParents[fCounter] == m)
             {
-            	// nie liczymy na zmiennopozycyjnych, wiec przesuniecie dziesietne
+                // nie liczymy na zmiennopozycyjnych, wiec przesuniecie dziesietne
                 int phi = noOfChosenChildren[fCounter] * 100 / m;
 
                 if (phi < EngineConstants.sigmaDecisionBorder)
@@ -101,25 +107,25 @@ public class ImageRecreator {
 
 
                 //System.out.println("phi: " + phi + "; sigma: " + sigma + "; noOfChosenChildren: " + noOfChosenChildren);
- 
+
                 noOfChosenChildren[fCounter] = 0;
                 noOfChosenParents[fCounter] = 0;
             }
-            
+
             // wybor kolejnych cech dla danego kola
             // jezeli obsluzono wszystkie cechy, wybor nastepnego kola
             // ignoruj cechy ktore osiagnely wlasne kryterium stopu
             // wyjdz z petli z cecha bez stopu lub globalny stop
             for ( int i = 0; i < GenerationsCreator.fNumber; ++i)
             {
-            	fCounter = (fCounter + 1) % GenerationsCreator.fNumber;
-            	if ( fCounter == 0 )
-            		cCounter = (cCounter + 1) % noOfGenes;
-            		//cCounter = random.nextInt(noOfGenes);
-            	if ( sigma[fCounter] > EngineConstants.sigmaMinimum )
-            		break;
+                fCounter = (fCounter + 1) % GenerationsCreator.fNumber;
+                if ( fCounter == 0 )
+                    cCounter = (cCounter + 1) % noOfGenes;
+                //cCounter = random.nextInt(noOfGenes);
+                if ( sigma[fCounter] > EngineConstants.sigmaMinimum )
+                    break;
             }
-        	
+
             //try
             //{
             //    Thread.sleep(1000);
@@ -129,9 +135,9 @@ public class ImageRecreator {
             //    e.printStackTrace();
             //}
 
-        // jezeli wybrano ceche ze spelnionym warunkiem stopu, to globalny stop
-        } while (sigma[fCounter] > EngineConstants.sigmaMinimum);
-    	//wydruk oceny wyniku
+            // jezeli wybrano ceche ze spelnionym warunkiem stopu, to globalny stop
+        } while (sigma[fCounter] > EngineConstants.sigmaMinimum && cont);
+        //wydruk oceny wyniku
         System.out.println( "result: " + compatibilityFactor );
     }
 }
