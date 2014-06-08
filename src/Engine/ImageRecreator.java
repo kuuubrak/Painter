@@ -139,5 +139,7 @@ public class ImageRecreator implements Runnable {
         } while (sigma[fCounter] > EngineConstants.sigmaMinimum && cont);
         //wydruk oceny wyniku
         System.out.println( "result: " + compatibilityFactor );
+        //Powiadomienie o zakończeniu pracy
+        mainFrame.algorithmStopped();
     }
 }

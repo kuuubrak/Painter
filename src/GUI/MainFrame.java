@@ -124,6 +124,7 @@ public class MainFrame extends JFrame implements GUIComponent {
                 else
                 {
                     recr.cont = false;
+
                     try
                     {
                         recreator.join();
@@ -132,6 +133,7 @@ public class MainFrame extends JFrame implements GUIComponent {
                     {
                         e1.printStackTrace();
                     }
+
                     recreator = null;
                     recr = null;
 
@@ -139,6 +141,7 @@ public class MainFrame extends JFrame implements GUIComponent {
                     loadButton.setEnabled(true);
                     parametersButton.setEnabled(true);
                     runButton.setText("Run");
+
                 }
 
             }
@@ -214,4 +217,17 @@ public class MainFrame extends JFrame implements GUIComponent {
         update(getGraphics());
         //currentImagePanel.update(getGraphics());
     }
+
+    @Override
+    public void algorithmStopped()
+    {
+        recreator = null;
+        recr = null;
+
+        clearButton.setEnabled(true);
+        loadButton.setEnabled(true);
+        parametersButton.setEnabled(true);
+        runButton.setText("Run");
+    }
+
 }

@@ -9,4 +9,6 @@ public interface GUIComponent {
 
     public void updateCurrentImage(BufferedImage currentImage);
 
+    public void algorithmStopped();
+
 }
