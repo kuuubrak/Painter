@@ -14,11 +14,13 @@ import java.util.Random;
 
 /**
  * Created by tomasz on 16.05.2014.
- *
+ * Methods' implementation: tomasz, rafal, mariusz
  * Klasa reprezentująca jednego osobnika populacji
+ * Metody obejmuja przede wszystkim jego mutacje oraz rysowanie
  */
 public class GenerationsCreator {
 
+    /* ilosc kolek skladajacych sie na osobnika */
     static int noOfGenes = 0;
     static Dimension dimension = new Dimension();
     
@@ -40,6 +42,7 @@ public class GenerationsCreator {
         GenerationsCreator.dimension = dimension;
     }
 
+    /* generowanie pierwszego osobnika - jego cechy zostana wylosowane wg rozkladu jednorodnego */
     public GenerationsCreator()
     {
         int i = 0;
@@ -52,6 +55,8 @@ public class GenerationsCreator {
         }
     }
 
+    /* kontruktor kolejnego osobnika
+     * jest on identyczny z rodzicem, mutacja nastepuje pozniej i jest pod kontrola innej klasy */
     public GenerationsCreator(final GenerationsCreator toBeCopied)
     {
         //Kopiowanie kółek
@@ -67,7 +72,8 @@ public class GenerationsCreator {
     	}
     }
 
-    // mutuje tylko jedna cecha, dla jednego kolka, z odpowiednia sigma
+    /* metoda mutacji - mutuje tylko jedna cecha, dla jednego kolka, z odpowiednia sigma
+     * przekazywane parametry okreslaja deterministycznie ktora cecha ma mutowac dla ktorego skladowego kola */
     public void mutate(final double[] sigma, final int cCounter, final int fCounter)
     {
     	Circle circle = circles[cCounter];
@@ -120,72 +126,5 @@ public class GenerationsCreator {
         }
         return s;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    public GenerationsCreator(Circle baseCircle) {
-        this.baseCircle = baseCircle;
-        this.sigmaAttribute = EngineConstants.exampleStartingSigma;
-        this.compatibilityFactor = 0.0;
-        this.phiAttribute = 0;
-        iterationCounter = 0;
-        correctImageCounter = 0;
-        this.currentCircle = baseCircle;
-    }
-    */
-
-    /*
-    public BufferedImage createNextGeneration(BufferedImage currentImage, BufferedImage targetImage) {
-
-        BufferedImage newGenerationImage = null;
-        newGenerationImage = paintNewCircle(currentImage);
-
-        double newCompatibilityFactor = ImageComparator.compareTwoImages(newGenerationImage, targetImage);
-        if (newCompatibilityFactor > compatibilityFactor) {
-            compatibilityFactor = newCompatibilityFactor;
-            currentCircle = new Circle(newCircle);
-            correctImageCounter++;
-        }
-        iterationCounter++;
-        updateAttribues();
-
-        return newGenerationImage;
-    }
-    */
-
-    /*
-    public void setBeginningCompatibilityFactor(BufferedImage currentImage, BufferedImage targetImage) {
-        compatibilityFactor = ImageComparator.compareTwoImages(currentImage, targetImage);
-    }
-    */
-
-    /*
-    private void updateAttribues () {
-        if (iterationCounter == EngineConstants.mAttribute) {
-            iterationCounter = 0;
-            phiAttribute = (double)correctImageCounter / (double) EngineConstants.mAttribute;
-            if (phiAttribute > EngineConstants.sigmaDecisionBorder) {
-                sigmaAttribute = EngineConstants.c2Attribute * sigmaAttribute;
-            } else if (phiAttribute < EngineConstants.sigmaDecisionBorder) {
-                sigmaAttribute = EngineConstants.c1Attribute * sigmaAttribute;
-            }
-            correctImageCounter = 0;
-        }
-    }
-    */
 
 }
