@@ -5,6 +5,7 @@ import java.util.Random;
 
 /**
  * Created by tomasz on 12.05.2014.
+ * Modified by mariusz.
  * Pojedynczy okrag skladajacy sie na osobnika populacji
  * Okreslone sa procesy stochastyczne generujace jego specyfike
  * te zwiazane z mutacja okreslone sa przez rozklad normalny ze zmiennym odchyleniem standardowym i stala srednia
