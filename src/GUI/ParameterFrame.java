@@ -44,12 +44,12 @@ public class ParameterFrame extends JPanel {
             fieldPanel.add(p);
         }
 
-        fields[0].setText(new Double(EngineConstants.c1Attribute).toString());
-        fields[1].setText(new Double(EngineConstants.c2Attribute).toString());
-        fields[2].setText(new Integer(EngineConstants.mAttribute).toString());
-        fields[3].setText(new Double(EngineConstants.sigmaMinimum).toString());
-        fields[4].setText(new Double(EngineConstants.exampleStartingSigma).toString());
-        fields[5].setText(new Integer(EngineConstants.noOfGenes).toString());
+        fields[0].setText(Double.toString(EngineConstants.c1Attribute));
+        fields[1].setText(Double.toString(EngineConstants.c2Attribute));
+        fields[2].setText(Integer.toString(EngineConstants.mAttribute));
+        fields[3].setText(Double.toString(EngineConstants.sigmaMinimum));
+        fields[4].setText(Double.toString(EngineConstants.exampleStartingSigma));
+        fields[5].setText(Integer.toString(EngineConstants.noOfGenes));
     }
 
     public String getText(int i) {
@@ -68,12 +68,36 @@ public class ParameterFrame extends JPanel {
         JButton submit = new JButton("Accept");
         submit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                EngineConstants.c1Attribute = Double.parseDouble(form.getText(0));
-                EngineConstants.c2Attribute = Double.parseDouble(form.getText(1));
-                EngineConstants.mAttribute = Integer.parseInt(form.getText(2));
-                EngineConstants.sigmaMinimum = Double.parseDouble(form.getText(3));
-                EngineConstants.exampleStartingSigma = Double.parseDouble(form.getText(4));
-                EngineConstants.noOfGenes = Integer.parseInt(form.getText(5));
+
+                Double c1Attribute;
+                Double c2Attribute;
+                Integer mAttribute;
+                Double sigmaMinimum;
+                Double exampleStartingSigma;
+                Integer noOfGenes;
+
+                try
+                {
+                    c1Attribute = Double.parseDouble(form.getText(0));
+                    c2Attribute = Double.parseDouble(form.getText(1));
+                    mAttribute = Integer.parseInt(form.getText(2));
+                    sigmaMinimum = Double.parseDouble(form.getText(3));
+                    exampleStartingSigma = Double.parseDouble(form.getText(4));
+                    noOfGenes = Integer.parseInt(form.getText(5));
+                }
+                catch (NumberFormatException nfe)
+                {
+                    JOptionPane.showMessageDialog(null, "Malformed numbers format", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                EngineConstants.c1Attribute = c1Attribute;
+                EngineConstants.c2Attribute = c2Attribute;
+                EngineConstants.mAttribute = mAttribute;
+                EngineConstants.sigmaMinimum = sigmaMinimum;
+                EngineConstants.exampleStartingSigma = exampleStartingSigma;
+                EngineConstants.noOfGenes = noOfGenes;
+
 
                 f.dispose();
             }
