@@ -5,13 +5,15 @@ package Engine;
  * Modified by mariusz
  */
 public class EngineConstants {
+    // wspolczynniki modyfikacji sigmy
     public static double c1Attribute = 0.82;
     public static double c2Attribute = 1.2;
     // co ile mutacji ma nastapic modyfikacja sigmy
     public static int mAttribute = 10;
+    // minimalna sigma ktora powoduje zatrzmanie ewolucji cechy
     public static double sigmaMinimum = 0.000005;
     public static double exampleStartingSigma = 0.5;
-    // minimalna sigma ktora powoduje zatrzmanie ewolucji cechy
+    // graniczna proporcja wybranych potomkow okreslajaca modyfikacje sigmy
     //public static double sigmaDecisionBorder = 0.2;
     // nizej w wersji stalopozycyjnej
     public static double sigmaDecisionBorder = 20;
