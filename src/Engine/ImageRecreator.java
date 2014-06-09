@@ -1,12 +1,9 @@
 package Engine;
 
-import DataModel.Circle;
-import Engine.FileManager.ImageManager;
 import GUI.GUIComponent;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 /**
  * Object model by tomasz on 16.05.2014.
@@ -85,7 +82,6 @@ public class ImageRecreator implements Runnable {
             /* 3.1 Ocena potomka [i rodzica]
             /* na podstawie oceny ktory lepiej przybliza oryginalny obraz
              * miara jest suma po pikselach sumy modulow roznic miedzy skladowymi koloru (RGB) */
-            //TODO nie trzeba liczyć dwa razy współczynnika dopasowania dla rodzica
             BufferedImage parentImage = parent.getBufferedImage();
             double parentCompatibilityFactor = ImageComparator.cTI(parentImage, targetImage);
             BufferedImage childImage = child.getBufferedImage();

@@ -10,6 +10,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * @author Rafał Jagielski
+ */
 public class ParameterFrame extends JPanel {
 
     private JTextField[] fields;

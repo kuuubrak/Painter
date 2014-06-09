@@ -1,6 +1,5 @@
 package GUI;
 
-import DataModel.Circle;
 import Engine.FileManager.ImageManager;
 import Engine.ImageRecreator;
 
@@ -12,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * Created by tomasz on 13.05.2014.
+ * @author Tomasz Kubrak, Rafał Jagielski
  */
 public class MainFrame extends JFrame implements GUIComponent {
 
@@ -64,7 +63,7 @@ public class MainFrame extends JFrame implements GUIComponent {
 
     private static void createMainFrame() {
         MainFrame mainFrame = new MainFrame(GuiConstants.mainFrameTitle);
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
     }
 
@@ -75,7 +74,7 @@ public class MainFrame extends JFrame implements GUIComponent {
     }
 
     private void createImagePanels() {
-        Dimension panelDimension = new Dimension(this.getWidth(), this.getHeight()/2);
+        //Dimension panelDimension = new Dimension(this.getWidth(), this.getHeight()/2);
         Dimension targetDimension = new Dimension(targetImage.getWidth(), targetImage.getHeight());
         targetImagePanel = new ImagePanel(targetDimension, targetImage);
         currentImagePanel = new ImagePanel(targetDimension, currentImage);
@@ -91,12 +90,14 @@ public class MainFrame extends JFrame implements GUIComponent {
     }
 
     private void loadTargetImage() {
-        targetImage = loader.loadImage(ImageManager.examplePath);
+        Dimension dim = new Dimension(200, 300);
+        targetImage = ImageManager.intializeStartingImage(dim);
+        //targetImage = loader.loadImage(ImageManager.examplePath);
     }
 
     private void loadCurrentImage() {
         Dimension dim = new Dimension(targetImage.getWidth(), targetImage.getHeight());
-        currentImage = loader.intializeStartingImage(dim);
+        currentImage = ImageManager.intializeStartingImage(dim);
     }
 
     private void createButtons () {
@@ -150,9 +151,8 @@ public class MainFrame extends JFrame implements GUIComponent {
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ImageManager imageManager = new ImageManager();
                 Dimension currentDimension = new Dimension(targetImage.getWidth(), targetImage.getHeight());
-                currentImage = imageManager.intializeStartingImage(currentDimension);
+                currentImage = ImageManager.intializeStartingImage(currentDimension);
                 currentImagePanel.setImage(currentImage);
                 currentImagePanel.repaint();
             }
@@ -177,7 +177,7 @@ public class MainFrame extends JFrame implements GUIComponent {
                     targetImagePanel = new ImagePanel(targetDimension, targetImage);
                     targetImagePanel.repaint();
 
-                    currentImage = loader.intializeStartingImage(targetDimension);
+                    currentImage = ImageManager.intializeStartingImage(targetDimension);
                     currentImagePanel.setImage(currentImage);
                     currentImagePanel.repaint();
 
@@ -213,7 +213,6 @@ public class MainFrame extends JFrame implements GUIComponent {
         this.currentImage = currentImage;
         currentImagePanel.setImage(currentImage);
         //currentImagePanel.repaint();
-        //TODO Trzeba dobrze ogarnąć wyświetlanie w Javie, tzn. jakiej metody tu użyć
         update(getGraphics());
         //currentImagePanel.update(getGraphics());
     }

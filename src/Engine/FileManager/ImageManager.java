@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by tomasz on 12.05.2014.
+ * @author Tomasz Kubrak
  */
 
 
@@ -25,7 +25,10 @@ public class ImageManager {
         BufferedImage loadedImage = null;
         try {
             loadedImage = ImageIO.read(new File(imagePath));
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("ImageManager.loadImage error (" + imagePath + ")");
         }
         return loadedImage;
     }
@@ -33,8 +36,7 @@ public class ImageManager {
     public Dimension getImageSize(BufferedImage loadedImage) {
         int height =  loadedImage.getHeight();
         int width = loadedImage.getWidth();
-        Dimension imageDimension = new Dimension(width, height);
-        return imageDimension;
+        return new Dimension(width, height);
     }
 
     public static BufferedImage intializeStartingImage (Dimension dimension) {
@@ -46,8 +48,7 @@ public class ImageManager {
     }
 
     public byte[] convertImageToPixelMap(BufferedImage loadedImage) {
-        byte[] pixels = ((DataBufferByte)loadedImage.getRaster().getDataBuffer()).getData();
-        return pixels;
+        return ((DataBufferByte)loadedImage.getRaster().getDataBuffer()).getData();
     }
 
     public static BufferedImage bufferedImageDeepCopy(BufferedImage bi) {
