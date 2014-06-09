@@ -5,6 +5,12 @@ import java.util.Random;
 
 /**
  * Created by tomasz on 12.05.2014.
+ * Pojedynczy okrag skladajacy sie na osobnika populacji
+ * Okreslone sa procesy stochastyczne generujace jego specyfike
+ * te zwiazane z mutacja okreslone sa przez rozklad normalny ze zmiennym odchyleniem standardowym i stala srednia
+ * (metody mutate*)
+ * te zwiazane z generowaniem pierwszego osobnika sa okreslone przez rozklad jednorodny na zdefiniowanych przedzialach
+ * (metody *random*)
  */
 
 
@@ -22,8 +28,10 @@ public class Circle implements Cloneable {
     // Required, because Color constructor requires sometimes value in 0.0 - 1.0 range
     private static final float creationWithAlphaFactor = 255;
 
+    // promien
     private int radius;
-    private float alpha; //przyjmuje wartości od 0 do 1 ??
+    // przezroczystosc
+    private float alpha;
     private Point centerPoint;
     private Color fillColor;
 
@@ -117,56 +125,6 @@ public class Circle implements Cloneable {
         return s;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    public void modifyColorWithRandomValues(float red, float green, float blue, float alpha) {
-        float newRed = fillColor.getRed()/creationWithAlphaFactor + red;
-        float newGreen = fillColor.getGreen()/creationWithAlphaFactor + green;
-        float newBlue = fillColor.getBlue()/creationWithAlphaFactor + blue;
-        float newAlpha = this.alpha + alpha;
-
-        newRed = validateValue(newRed, maxColorComponentValue);
-        newGreen = validateValue(newGreen, maxColorComponentValue);
-        newBlue = validateValue(newBlue, maxColorComponentValue);
-        newAlpha = validateValue(newAlpha, maxColorComponentValue);
-
-        fillColor = new Color(newRed, newGreen, newBlue, newAlpha);
-        this.alpha = newAlpha;
-    }
-
-    public void modifySizeAndLocationWithRandomValues(float randomX, float randomY, Dimension maxDimension, float randomRadius) {
-            int newRadius = (int) (this.radius + randomRadius * maxRandomRadius);
-            double newX = this.centerPoint.getX() + randomX * maxDimension.getWidth();
-            double newY = this.centerPoint.getY() + randomY * maxDimension.getHeight();
-            newRadius = (int) validateValue((float)newRadius, (float) maxRandomRadius);
-            newX = (int)validateValue((float)newX, (float)maxDimension.getWidth());
-            newY = (int)validateValue((float)newY, (float)maxDimension.getHeight());
-            this.radius = newRadius;
-            this.centerPoint.setLocation(newX, newY);
-    }
-
-    private float validateValue(float value, float maxValue) {
-        if (value > maxValue) {
-            value = maxValue;
-        } else if (value < minFieldValue) {
-            value = minFieldValue;
-        }
-        return value;
-    }
-
-*/
 
     public void setCenterPoint(Point centerPoint) {
         this.centerPoint = centerPoint;
