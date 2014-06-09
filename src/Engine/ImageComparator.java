@@ -7,9 +7,11 @@ import java.awt.image.BufferedImage;
 
 /**
  * Created by tomasz on 16.05.2014.
+ * Klasa obslugujaca proces porownywania i oceny obrazu wzgledem obrazu docelowego
  */
 public class ImageComparator {
 
+    /* metoda oceny obrazu - suma modulow roznic skladowych koloru per piksel */
     public static double cTI(BufferedImage currentImage, BufferedImage targetImage)
     {
         long pixDiffSum = 0;
