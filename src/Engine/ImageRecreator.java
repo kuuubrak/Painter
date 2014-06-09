@@ -17,7 +17,7 @@ import java.util.Random;
  */
 public class ImageRecreator implements Runnable {
 
-    /* licznosc kolek */
+    /* licznosc kolek skladajacych sie na pojedynczego osobnika */
     private final int noOfGenes;
     /* sigma jest odchyleniem standardowym rozkladu normalnego cechy
      * kazda cecha ma osobna sigme, poniewaz ma osobny rozklad */
