@@ -9,15 +9,20 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 /**
- * Created by tomasz on 16.05.2014.
- *
- * Klasa zawierająca główny algorytm genetyczny.
+ * Object model by tomasz on 16.05.2014.
+ * Methods' implementation by tomasz, rafal, mariusz
+ * Klasa zawierająca algorytm genetyczny 1+1.
+ * Przedmiotem ewolucji jest ciag kolek, ktorego cechami sa: wspolrzedne srodka, kolor, promien i przezroczystosc
+ * Liczebnosc cech okresla fNumber, liczebnosc kolek noOfGenes
  */
 public class ImageRecreator implements Runnable {
 
+    /* licznosc kolek */
     private final int noOfGenes;
-    // kazda cecha ma osobna sigme, poniewaz ma osobny rozklad
+    /* sigma jest odchyleniem standardowym rozkladu normalnego cechy
+     * kazda cecha ma osobna sigme, poniewaz ma osobny rozklad */
     private double[] sigma = new double[GenerationsCreator.fNumber];
+    /* parametr m okreslajacy co ile mutacji nalezy weryfikowac sigme */
     private int m;
     private BufferedImage targetImage;
 
@@ -37,8 +42,16 @@ public class ImageRecreator implements Runnable {
         this.targetImage = targetImage;
     }
 
+    /* metoda zawiera procedure ewolucji 
+     * w pojedynczej iteracji mutuje jedno kolo i jedna cecha 
+     * wybor kola i cechy jest deterministyczny, kolejne cechy mutuja, 
+     * po czym nastepuje przejscie do nastepnego kola; 
+     * rodzic i potomek sa porownywani na podstawie sumy modulow roznic skladowych kolorow per piksel 
+     * kazda cecha ewoluuje az do spelnienia kryterium minimalnej sigmy
+     * gdy wszystkie cechy osiagna kryterium stopu, algorytm konczy dzialanie */
     public void run()
     {
+        /* 0. inicjalizacja */
         //Ustawianie parametrów populacji
         Dimension imageSize = new Dimension(targetImage.getWidth(), targetImage.getHeight());
         GenerationsCreator.setDimension(imageSize);
@@ -58,16 +71,20 @@ public class ImageRecreator implements Runnable {
         // do wydruku koncowej oceny dopasowania
         double compatibilityFactor = 0;
 
-        // 1. Tworzenie osobnika początkowego
+        /* 1. Tworzenie osobnika początkowego */
         GenerationsCreator parent = new GenerationsCreator();
         mainFrame.updateCurrentImage(parent.getBufferedImage());
 
         do {
-            // 2. Generowanie potomka
+            /* 2. Generowanie potomka */
             GenerationsCreator child = new GenerationsCreator(parent);
+            // mutacja pojedynczej cechy - wybor na podstawie przekazywanych parametrow
             child.mutate(sigma,cCounter,fCounter);
 
-            // 3. Wybieranie lepszego osobnika
+            /* 3. Wybieranie lepszego osobnika */
+            /* 3.1 Ocena potomka [i rodzica]
+            /* na podstawie oceny ktory lepiej przybliza oryginalny obraz
+             * miara jest suma po pikselach sumy modulow roznic miedzy skladowymi koloru (RGB) */
             //TODO nie trzeba liczyć dwa razy współczynnika dopasowania dla rodzica
             BufferedImage parentImage = parent.getBufferedImage();
             double parentCompatibilityFactor = ImageComparator.cTI(parentImage, targetImage);
@@ -78,6 +95,7 @@ public class ImageRecreator implements Runnable {
             //System.out.println("childCompatibilityFactor: " + childCompatibilityFactor);
             //System.out.println(child);
 
+            /* 3.2 porownanie ocen, wybor lepszego z nich i zapis statystyk algorytmu */
             if (childCompatibilityFactor < parentCompatibilityFactor)
             {
                 parent = child;
